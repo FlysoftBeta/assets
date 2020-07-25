@@ -1,7 +1,4 @@
 /**
- * 专为danmuplayer定制的jquery.danmu.js
- *
- *
  * jQuery Generic Plugin Module
  * Version 0.1
  * Copyright (c) 2011 Cyntax Technologies - http://cyntaxtech.com
@@ -232,12 +229,10 @@ var cyntax = {
 
 })(jQuery);
 /*!
- *弹幕引擎核心
+ *Danmu Core
  *
- * Copyright 2015 by Ruiko Of AcGit.cc
+ * Copyright 2015 by Ruiko
  * @license MIT
- *
- * 版本3.0 2015/08/12
  */
 
 
@@ -264,21 +259,15 @@ var cyntax = {
             "overflow": "hidden"
         });
         var me = this;
-        //播放器长宽
         me.height = this.$element.height();
         me.width = this.$element.width();
-        //速度
         me.speed = 1000/options.speed;
-
-        //防止重复
         this.launched = [];
         this.preTime = 0;
-        //最大弹幕数控制
         var maxCount = this.options.maxCountInScreen;
         var maxCountPerSec = this.options.maxCountPerSec;
         var nowCount = 0;
         var nowSecCount = 0;
-        //格式控制
         this.rowCount = parseInt(me.height / options.FontSizeBig);
         if (me.options.SubtitleProtection) {
             me.rowCount = me.rowCount - 3;
@@ -287,7 +276,6 @@ var cyntax = {
         this.topRows=[];
         this.bottomRows=[];
         this.initRows = function (me) {
-            // me.rowCount = parseInt(me.height / options.FontSizeBig);
             for (var i = 0; i < me.rowCount; i++) {
                 me.rows[i] = 0;
                 me.topRows[i]=0;
@@ -332,11 +320,6 @@ var cyntax = {
                 }
             }
         };
-        //me.startCheck = function(me){
-        //    setInterval(me.checkRow(me),10);
-        //};
-        //  me.startCheck(me);
-
         $("<div class='danmakuTimer'></div>").appendTo(this.$element);
         this.$timer = $(".danmakuTimer");
         this.$timer.timer({
@@ -345,24 +328,19 @@ var cyntax = {
             autostart: false,
             callback: function (index) {
                 setTimeout(function () {
-                    //计时前置  试验表明前置很好
                     if (me.options.danmuLoop && $(element).data("nowTime") >= $(element).data("sumTime")) {
                         $(element).data("nowTime", 0);
                     }
                     $(element).data("nowTime", $(element).data("nowTime") + 1);
-                    //更新播放器面积参数
                     me.height = $(element).height();
                     me.width = $(element).width();
-                    //防止重复
                     if (Math.abs($(element).data("nowTime") - (me.preTime + 1)) > 10) {
                         me.launched = [];
                     }
                     me.preTime = $(element).data("nowTime");
-                    //更新行数
                     var rowCOld = me.rowCount;
                     me.rowCount = parseInt(me.height / options.FontSizeBig);
                     setTimeout(me.checkRow(me), 0);
-                    //字幕保护
                     if (me.options.SubtitleProtection) {
                         me.rowCount = me.rowCount - 3;
                     }
@@ -376,10 +354,6 @@ var cyntax = {
                         var danmus = $(element).data("danmuList")[nowTime];
                         for (var i = (danmus.length - 1); i >= 0; i--) {
                             setTimeout(me.checkRow(me), 0);
-                            //setTimeout(me.runDanmu(danmus[i],nowCount,maxCount,nowSecCount,maxCountPerSec,options,me,$(element),speed,$(this)),1);
-                            //  setTimeout(me.runDanmu(danmus[i],options,me,$(element),speed,$(this)),1);
-
-                            // console.log(nowCount);
                             var a_danmu = "<span class='danmaku' id='" + me.id + "tempDanmaku'></span>";
                             $(element).append(a_danmu);
                             var danmaku = danmus[i];
@@ -412,7 +386,6 @@ var cyntax = {
                                     danmaku["row"] = row;
                                     var top_local = (row) * options.FontSizeBig;
                                     danmaku["width"] = $("#" + flyTmpName).width();
-                                    // var offsetLeft = parseInt(Math.random() * 2 * options.FontSizeBig);
                                     var left_local = $("#" + me.id).width();
                                     $("#" + flyTmpName).css({
                                         "width": $("#" + flyTmpName).width()
@@ -476,15 +449,12 @@ var cyntax = {
                                     }
                                 );
 
-                            } //else if
+                            } 
                             danmus[i] = danmaku;
-                        }   // for in danmus
+                        }  
                         $(element).data("danmuList")[nowTime] = danmus
-                    }  //if (danmus)
+                    }
                     me.launched.push($(element).data("nowTime"));
-                    //   }, 0);
-
-                    //循环
                     if (index == options.sumTime && options.isLoop) {
                         me.$timer.timer('stop');
                         me.$timer.timer('start');
